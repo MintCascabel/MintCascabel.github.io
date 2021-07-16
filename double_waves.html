@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="canvas" width="400" height="320">
+</canvas>
+
+<button onclick="changeMode()">Change mode</button>
+
+<br>
+
+<script>
+
+function copy2d(arr) {
+	var newArr = [];
+	
+	for (var i = 0; i < arr.length; i++) {
+		newArr.push(arr[i].slice());
+	}
+	
+	return newArr;
+}
+
+function new2d(X, Y, d) {
+	var newArr = [];
+	
+	for (var x = 0; x < X; x++) {
+		var subArr = [];
+		for (var y = 0; y < Y; y++) {
+			subArr.push(d);
+		}
+		newArr.push(subArr);
+	}
+	
+	return newArr;
+}
+
+function color(v) {
+	if (v >= 0) {
+		return "rgb(" + Math.floor(255 * v) + "," + Math.floor(64 * v) + "," + Math.floor(64 * v) + ")";
+	} else {
+		return "rgb(" + 0 + "," + Math.floor(-128 * v) + "," + Math.floor(-255 * v) + ")";
+	}
+}
+
+function drawPixel(ctx, c, x, y){
+	ctx.fillStyle = c;
+	ctx.fillRect(scale*x, scale*y, scale, scale);
+}
+
+
+function update(ctx, state, dt) {
+	
+	var value = state[0];
+	var time_div = state[1];
+	
+	var newVal = copy2d(value);
+	var newDiv = copy2d(time_div);
+	
+	var X = value.length;
+	var Y = value[0].length;
+	
+	for (var x = 1; x < X - 1; x++) {
+		for (var y = 1; y < Y - 1; y++) {
+			if(!blocked[x][y]){
+				//Five-point stencil
+				
+				/*
+				lapl = value[x + 1][y] - 2 * value[x][y] + value[x - 1][y]; //d^2 u / dx^2
+				lapl += value[x][y + 1] - 2 * value[x][y] + value[x][y - 1]; //d^2 u / dy^2
+				*/
+				
+				//Diagonals
+				
+				lapl = (value[x - 1][y - 1] + value[x + 1][y - 1] + value[x - 1][y + 1] + value[x + 1][y + 1]) / 6;
+				lapl += 2*(value[x - 1][y] + value[x + 1][y] + value[x][y - 1] + value[x][y + 1])/3
+				lapl -= 10 * value[x][y] / 3;
+				
+				newDiv[x][y] = lapl * dt + time_div[x][y]; //d^2 u / dt^2 = laplacian u
+				newVal[x][y] = newDiv[x][y]* dt + value[x][y];
+				
+				//tanh
+				var v = 2 / (1 + Math.exp(-2 * newVal[x][y])) - 1;
+				
+				drawPixel(ctx, color(v), x, y);
+			}
+		}
+	}
+	
+	return [newVal, newDiv];
+}
+
+function pack(canvas) {
+	canvas.width = X * scale;
+	canvas.height = Y * scale;
+	var ctx = canvas.getContext("2d");
+	
+	ctx.fillStyle = "rgb(0,0,0)";
+	ctx.fillRect(0, 0, X*scale, Y*scale);
+	
+	var value = new2d(X, Y, 0);
+	var time_div = new2d(X, Y, 0);
+	
+	blocked = new2d(X, Y, false);
+	
+	var state = [value, time_div];
+	
+	dt = 0.25;
+	
+	return function() {
+		state = update(ctx, state, dt);
+		
+		while(clickX.length > 0) {
+			var x = clickX.pop();
+			var y = clickY.pop();
+			if (currentMode == Mode.EXCITE) {
+				state[1][x][y] += -20;
+			} else if (currentMode == Mode.BLOCK) {
+				state[0][x][y] = 0;
+				state[1][x][y] = 0;
+				blocked[x][y] ^= true;
+				drawPixel(ctx, "white", x, y);
+			}
+		}
+	}
+}
+
+function changeMode(event) {
+	currentMode ^= 1; //Change if more modes are added.
+}
+
+function mouseDown(event) {
+	clicking = true;
+}
+
+function mouseEvent(event) {
+	if(clicking) {
+		cx = Math.floor(event.offsetX / scale);
+		cy = Math.floor(event.offsetY / scale);
+		if ((cx != lastX) || (cy != lastY)) {
+			clickX.push(cx);
+			clickY.push(cy);
+			lastX = cx;
+			lastY = cy;
+		}
+	}
+}
+
+function clearMouse(event) {
+	clicking = false;
+	lastX = -1;
+	lastY = -1;
+}
+
+var clicking = false;
+
+var lastX = -1;
+var lastY = -1;
+
+var blocked;
+
+var Mode = {BLOCK: 0, EXCITE: 1,};
+
+var currentMode = Mode.EXCITE;
+
+var clickX = [];
+var clickY = [];
+
+var X = 100;
+var Y = 60;
+
+var canvas = document.getElementById("canvas");
+canvas.addEventListener("mousedown", mouseDown, false);
+canvas.addEventListener("mousedown", mouseEvent, false);
+canvas.addEventListener("mousemove", mouseEvent, false);
+canvas.addEventListener("mouseup", clearMouse, false);
+
+var interval;
+
+var scale = 5;
+
+var delay = 10;
+
+function reset() {
+	if (interval !== undefined) clearInterval(interval);
+	interval = setInterval(pack(canvas), delay)
+}
+
+reset()
+
+</script>
+
+</body>
+</html>

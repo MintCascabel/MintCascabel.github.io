@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<meta charset="UTF-8"> 
+<html>
+<body>
+
+<canvas id="main_canvas" width="0" height="0"></canvas>
+
+<br>
+
+<table id="h" style="font-family:monospace;">
+<table>
+
+<form>
+	Colors: <br>
+	<input type="text" id="col" value = "5"><br>
+	Angular spacing:<br>
+	<input type="text" id="ang" value = "60"><br>
+	Saturation:<br>
+	<input type="text" id="sat" value = "1"><br>
+	Resolution:<br>
+	<input type="text" id="res" value = "150"><br>
+</form>
+
+<button onclick="apply()">Apply</button>
+
+<script>
+
+/* Used for map in convertHslRgb */
+function byteScale(b) {
+	return Math.round(255 * b);
+}
+
+function smooth(n, m) {
+	//Why does n % m not map to [0, m) ?
+	return ((n % m) + m) % m;
+}
+
+/* h: [0, 360], s: [0,1], l: [0,1] */
+function convertHslRgb(h, s, l) {
+
+	h = smooth(h, 360); //Normalize angle
+	
+	//https://en.wikipedia.org/wiki/HSL_and_HSV#Converting_to_RGB
+	
+	c = (1 - Math.abs(2 * l - 1)) * s; //Chroma
+	hp = Math.floor(h / 60); //Circle is divided into six sections
+	x = c * (1 - Math.abs( ((h / 60) % 2) - 1 )); //Brightness of maximal component
+	m = l - c / 2; //Base brightness
+	r = m;
+	g = m;
+	b = m;
+	
+	switch(hp) {
+		case 0: case 5:
+			r += c;
+			break;
+		case 1: case 2:
+			g += c;
+			break;
+		default:
+			b += c;
+	}
+	
+	switch(hp) {
+		case 1: case 4:
+			r += x;
+			break;
+		case 0: case 3:
+			g += x;
+			break;
+		default:
+			b += x;
+	}
+	
+	return [r, g, b].map(byteScale);
+}
+
+function convertHslRgbStyle(h, s, l) {
+	c = convertHslRgb(h, s, l);
+	return "rgb(" + c[0] + "," + c[1] + "," + c[2] + ")";
+}
+
+function intTo2CharHex(d) {
+	return ("0" + d.toString(16)).slice(-2).toUpperCase();
+}
+
+function convertHslRgbCode(h, s, l) {
+	c = convertHslRgb(h, s, l).map(intTo2CharHex);	
+	return "#" + c[0] + c[1] + c[2];
+}
+
+function render(canvas) {
+
+	var r = res / 2;
+	
+	for (var x = 0; x < res; x++) {
+		for (var y = 0; y < res; y++) {
+			//Scaled x and y
+			sx = (x - r) / r;
+			sy = (y - r) / r;
+			//Luminance squared
+			ls = Math.pow(sx, 2) + Math.pow(sy, 2);
+			
+			if (ls <= 1) {
+				
+				l = Math.pow(ls, 0.5);
+				h = Math.floor(180 * (Math.atan2(sy,sx) / Math.PI + 1));
+				
+				canvas.fillStyle = convertHslRgbStyle(h, sat, l);
+				
+			} else {
+			
+				canvas.fillStyle = "white";
+			
+			}
+			
+			canvas.fillRect(x, y, 1, 1);
+		}
+	}
+}
+
+function apply() {
+	
+	var newColors = parseInt(document.getElementById("col").value);
+	colors = isNaN(newColors)? colors: newColors;
+	var newAngle = parseInt(document.getElementById("ang").value);
+	angle = isNaN(newAngle)? angle: newAngle;
+	var newSat = parseFloat(document.getElementById("sat").value);
+	sat = isNaN(newSat)? sat: newSat;
+	var newRes = parseInt(document.getElementById("res").value);
+	res = isNaN(newRes)? res: newRes;
+	
+	main.width = res;
+	main.height = res;
+	
+	canvas = main.getContext("2d");
+	
+	console.log(colors, angle, sat, res);
+	
+	render(canvas);
+}
+
+function mouseEvent(event) {
+
+	if (!clicking) return;
+
+	cx = event.offsetX;
+	cy = event.offsetY;
+	
+	r = res / 2;
+	sx = (cx - r) / r;
+	sy = (cy - r) / r;
+	
+	ls = Math.pow(sx, 2) + Math.pow(sy, 2);
+	
+	if (ls <= 1) {
+		he = document.getElementById("h");
+	
+		l = Math.pow(ls, 0.5);
+		h = Math.floor(180 * (Math.atan2(sy,sx) / Math.PI + 1) - angle * (colors - 1) / 2);
+		
+		he.innerHTML = "<tr><td>Hexadecimal codes:</tr></td>";
+		
+		ch = Math.floor(180 * (Math.atan2(sy,sx) / Math.PI + 1));
+		
+		for(var i = 0; i < colors; i++) {
+		
+			var start = i * length;
+			
+			code = convertHslRgbCode(h + angle * i, sat, l);
+			
+			he.innerHTML += "<tr><td style=\"background-color: " + code + ";\">" + code + "</td></tr>";
+		}
+	}
+}
+
+function mouseUp(){
+	clicking = false;
+}
+
+function mouseDown(){
+	clicking = true;
+}
+
+var colors, angle, sat, res;
+
+var clicking = false;
+
+main = document.getElementById("main_canvas");
+
+main.addEventListener("mousedown", mouseDown, false);
+main.addEventListener("mousedown", mouseEvent, false);
+main.addEventListener("mousemove", mouseEvent, false);
+main.addEventListener("mouseup", mouseUp, false);
+
+apply();
+
+</script>
+
+</body>
+</html>

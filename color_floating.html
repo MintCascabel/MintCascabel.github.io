@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="canvas" width="400" height="320">
+</canvas>
+
+<br>
+
+<script>
+
+function copy2d(arr) {
+	var newArr = [];
+	
+	for (var i = 0; i < arr.length; i++) {
+		newArr.push(arr[i].slice());
+	}
+	
+	return newArr;
+}
+
+function new2d(X, Y, d) {
+	var newArr = [];
+	
+	for (var x = 0; x < X; x++) {
+		var subArr = [];
+		for (var y = 0; y < Y; y++) {
+			subArr.push(d);
+		}
+		newArr.push(subArr);
+	}
+	
+	return newArr;
+}
+
+function CFr(c){
+	if (c < 0) {
+		return "0";
+	} else {
+		return String(Math.floor(255 * c));
+	}
+}
+
+function CMYColor(c, m, y){
+	R = 1 - c;
+	G = 1 - m;
+	B = 1 - y;
+	max_v = Math.max(R, G, B);
+	var scale = max_v > 1 ? 1 / max_v : 1;
+	return "rgb(" + CFr(R) + "," + CFr(G) + "," + CFr(B) + ")";
+}
+
+function DirectionalColor(x, y) {
+	var l = Math.floor(200 / (1 + Math.exp(-2 * (x*x + y*y))) - 100); //Tanh of magnitude
+	var h = Math.floor(180 * (Math.atan2(y,x) / Math.PI + 1));
+	
+	return "hsl(" + h + ", 100%, " + l + "%)";
+}
+
+function MonotoneColor(v) {
+
+	var l = Math.floor(200 / (1 + Math.exp(-2 * v * v)) - 100); //Tanh of magnitude
+	
+	return "hsl(0, 0%, " + l + "%)";
+}
+
+function drawPixel(ctx, c, x, y){
+	ctx.fillStyle = c;
+	ctx.fillStyle = c;
+	ctx.fillRect(scale*x, scale*y, scale, scale);
+}
+
+function filledView(M){
+	var xL = M.length;
+	var yL = M[0].length;
+	function view(x, y){
+		if (0 < x) {
+			x = 0;
+		} else if (x <= xL) {
+			x = xL - 1;
+		}
+		if (0 < y) {
+			y = 0;
+		} else if (y <= yL) {
+			y = yL - 1;
+		}
+		return M[x][y];
+	}
+	return view;
+}
+
+
+// A zeroed view of an array. In approximation, this simulates the boundary condition
+// M_t = 0
+function zeroedView(M){
+	var xL = M.length;
+	var yL = M[0].length;
+	function view(x, y){
+		if ( 0 <= x && x < xL && 0 <= y && y < yL ){
+			return M[x][y];
+		} else {
+			return 0;
+		}
+	}
+	return view;
+}
+
+//Javascript, please
+function mod(x, y) {
+  return ((x % y) + y) % y;
+}
+
+// A reflected view of an array. In approximation, this simulates the boundary condition
+// M_x = 0
+
+function reflectedView(M){
+	xL = M.length;
+	yL = M[0].length;
+	function view(x, y){
+		xN = mod(x, 2 * xL);
+		yN = mod(y, 2 * yL);
+		xG = (xN >= xL);
+		yG = (yN >= yL);
+		xR = xG ? 2 * xL - xN - 1: xN;
+		yR = yG ? 2 * yL - yN - 1: yN;
+		return (xG ^ yG ? -1 : 1) * M[xR][yR];
+	}
+	return view;
+}
+
+// All of these take in a view u and coordinates for x and y.
+
+function dif_x(u, x, y) {
+	//3 point
+	//return (u(x + 1,y) - u(x - 1,y))/2;
+	//5 point
+	return (-u(x + 2,y) + 8 * u(x + 1,y) - 8 * u(x - 1,y) + u(x + 2,y))/12;
+}
+
+function dif_y(u, x, y) {
+	//3 point
+	//return (u(x,y + 1) - u(x,y - 1))/2;
+	//5 point
+	return (-u(x,y + 2) + 8 * u(x,y + 1) - 8 * u(x,y - 1) + u(x,y - 2))/12;
+}
+
+function dif_xx(u, x, y) {
+	//3 point
+	//return u(x + 1,y) - 2 * u(x,y) + u(x + 1,y);
+	//5 point
+	return (-u(x + 2,y) + 16 * u(x + 1,y) - 30 * u(x,y) + 16 * u(x - 1,y) - u(x - 2,y))/12; 
+}
+
+function dif_yy(u, x, y) {
+	//3 point
+	//return u(x + 1,y) - 2 * u(x,y) + u(x + 1,y);
+	//5 point
+	return (-u(x,y + 2) + 16 * u(x,y + 1) - 30 * u(x,y) + 16 * u(x,y - 1) - u(x,y - 2))/12; 
+}
+
+function dif_xy(u, x, y) {
+	//4 point
+	//return (u(x + 1,y + 1) - u(x + 1,y - 1) - u(x - 1,y + 1) + u(x - 1,y - 1))/4;
+	//16 point
+	return (u(x + 2,y + 2) -  8 * u(x + 2,y + 1) +  8 * u(x + 2,y - 1) -     u(x + 2,y - 2)
+	  - 8 * u(x + 1,y + 2) + 64 * u(x + 1,y + 1) - 64 * u(x + 1,y - 1) + 8 * u(x + 1,y - 2)
+	  + 8 * u(x - 1,y + 2) - 64 * u(x - 1,y + 1) + 64 * u(x - 1,y - 1) - 8 * u(x - 1,y - 2)
+	      - u(x - 2,y + 2) +  8 * u(x - 2,y + 1) -  8 * u(x - 2,y - 1) +     u(x - 2,y - 2))/144;
+}
+
+function update(ctx, state, dt) {
+	
+	//Fields:
+	//X: X component of velocity
+	var valX = reflectedView(state[0]);
+	var newX = copy2d(state[0]);
+	//Y: Y component of velocity
+	var valY = reflectedView(state[1]);
+	var newY = copy2d(state[1]);
+	//P: density
+	var valP = zeroedView(state[2]);
+	var newP = copy2d(state[2]);
+	//C: cyan value
+	var valC = zeroedView(state[3]);
+	var newC = copy2d(state[3]);
+	//M: magenta value
+	var valM = zeroedView(state[4]);
+	var newM = copy2d(state[4]);
+	//L: yellow value
+	var valL = zeroedView(state[5]);
+	var newL = copy2d(state[5]);
+	
+	//All of the fields should be the same size.
+	var X = state[0].length;
+	var Y = state[0][0].length;
+	
+	for (var x = 0; x < X; x++) {
+		for (var y = 0; y < Y; y++) {
+			
+			/*
+				Euler equations
+			*/
+			
+			// Pressure:
+			// Dp/Dt = -p Div u
+			// <=> dp/dt = -p Div u - u * Grad p
+			
+			//dpdt = -valX(x, y) * dif_x(valP, x, y) - valY(x, y) * dif_y(valP, x, y) - valP(x,y) * (valX(x,y) * dif_x(valX, x, y) + valY(x, y) * dif_y(valY, x, y));
+			dpdt = -valP(x,y) * dif_x(valX, x, y) - valX(x,y) * dif_x(valP, x, y) - valP(x,y) * dif_y(valY, x, y) - valY(x,y) * dif_y(valP, x, y);
+			newP[x][y] += dpdt * dt;
+			
+			// Velocity:
+			// Du/Dt = -Grad p
+			// <=> du/dt = -Grad p - u * Grad u
+			
+			//dXdt = -valX(x, y) * dif_x(valX, x, y) - valY(x, y) * dif_y(valX, x, y) - dif_x(valP, x, y);
+			dXdt = -valX(x,y) * dif_x(valX, x, y) - valY(x,y) * dif_y(valX, x, y) - (dif_x(valP, x, y) - mu * (dif_xy(valY, x, y) + 4 * dif_xx(valX, x, y) + 3 * dif_yy(valX, x, y))/3)/(lambda * valP(x,y));
+			newX[x][y] += dXdt * dt;
+			//dYdt = -valX(x, y) * dif_x(valY, x, y) - valY(x, y) * dif_y(valY, x, y) - dif_y(valP, x, y);
+			dYdt = -valX(x,y) * dif_x(valY, x, y) - valY(x,y) * dif_y(valY, x, y) - (dif_y(valP, x, y) - mu * (dif_xy(valX, x, y) + 4 * dif_yy(valY, x, y) + 3 * dif_xx(valY, x, y))/3)/(lambda * valP(x,y));
+			newY[x][y] += dYdt * dt;
+			
+			// Color:
+			// DC/Dt = 0
+			// <=> dC/dt = -u * Grad C
+			
+			dCdt = -valX(x, y) * dif_x(valC, x, y) - valY(x, y) * dif_y(valC, x, y);
+			newC[x][y] += dCdt * dt;
+			dMdt = -valX(x, y) * dif_x(valM, x, y) - valY(x, y) * dif_y(valM, x, y);
+			newM[x][y] += dMdt * dt;
+			dLdt = -valX(x, y) * dif_x(valL, x, y) - valY(x, y) * dif_y(valL, x, y);
+			newL[x][y] += dLdt * dt;
+			
+			drawPixel(ctx, CMYColor(newC[x][y], newM[x][y], newL[x][y]), x, y);
+			//drawPixel(ctx, DirectionalColor(newX[x][y], newY[x][y]), x, y);
+			//drawPixel(ctx, MonotoneColor(newP[x][y]), x, y);
+		}
+	}
+	
+	return [newX, newY, newP, newC, newM, newL];
+}
+
+function pack(canvas) {
+	canvas.width = X * scale;
+	canvas.height = Y * scale;
+	var ctx = canvas.getContext("2d");
+	
+	var stateX = new2d(X, Y, 0);
+	var stateY = new2d(X, Y, 0);
+	var stateP = new2d(X, Y, 1);
+	var stateC = new2d(X, Y, 0);
+	var stateM = new2d(X, Y, 0);
+	var stateL = new2d(X, Y, 0);
+	
+	for (var x = 1; x < X - 1; x++) {
+		for (var y = 1; y < Y - 1; y++) {
+			
+			r = Math.pow((4*x - 2 * X) / X, 2) + Math.pow((4*y - 2 * Y) / Y, 2);
+			if (r <= 0.5) {
+				stateX[x][y] = 1;
+				stateY[x][y] = 1;
+				stateC[x][y] = 2;
+			} else if (r <= 1) {
+				stateX[x][y] = 1;
+				stateY[x][y] = .5;
+				stateC[x][y] = 2;
+				stateM[x][y] = 2;
+			}
+		}
+	}
+	
+	var state = [stateX, stateY, stateP, stateC, stateM, stateL];
+	
+	dt = .1;
+	
+	return function() {
+		state = update(ctx, state, dt);
+	}
+}
+
+
+var X = 30;
+var Y = 30;
+
+var canvas = document.getElementById("canvas");
+
+var interval;
+
+var scale = 10;
+
+var delay = 10;
+
+var mu = 1;
+var lambda = 1;
+
+function reset() {
+	if (interval !== undefined) clearInterval(interval);
+	interval = setInterval(pack(canvas), delay)
+}
+
+function stop() {
+	if (interval !== undefined) clearInterval(interval);
+	interval = undefined;
+}
+
+reset();
+
+</script>
+
+</body>
+</html>

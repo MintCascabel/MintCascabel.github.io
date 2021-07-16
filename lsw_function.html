@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<meta charset="UTF-8"> 
+<html>
+<body>
+
+<canvas id="canvas" width="400" height="400">
+</canvas>
+<p id="counter">Ready.</p>
+
+<br>
+
+<script>
+
+function draw(ctx, px, py, X, Y) {
+	
+	ctx.fillStyle = "#FFFFFF";
+	ctx.strokeStyle = "#000000";
+	
+	ctx.clearRect(0,0,X,Y);
+	
+	ctx.beginPath();
+	ctx.moveTo(px[0]*X, (1 - py[0])*Y);
+	
+	var n = px.length;
+	
+	for (var i = 1; i < n; i++) {
+		ctx.lineTo(px[i]*(X - 1), (1 - py[i])*(Y - 1));
+		ctx.stroke();
+	}
+}
+
+function iteratePointsEps(a, b, Ax, Ay, eps) {
+	var i = 0;
+	while (i < Ax.length - 1) {
+		if (Math.pow(Ax[i] - Ax[i + 1], 2) + Math.pow(Ay[i] - Ay[i + 1], 2) < eps) {
+			i++;
+		} else {
+			nx = a * Ax[i] + (1 - a) * Ax[i + 1];
+			ny = b * Ay[i] + (1 - b) * Ay[i + 1];
+			Ax.splice(i + 1, 0, nx);
+			Ay.splice(i + 1, 0, ny);
+		}
+	}
+	return [Ax, Ay];
+}
+
+function geps() {
+	
+	var canvas = document.getElementById("canvas");
+	canvas.width = X;
+	canvas.height = Y;
+	var ctx = canvas.getContext("2d");
+	
+	Ax = [0, 1];
+	Ay = [0, 1];
+	
+	iteratePointsEps(a, b, Ax, Ay, eps);
+	
+	counter = document.getElementById("counter");
+	counter.innerHTML = "eps = " + eps + ", points = " + Ax.length;
+	
+	draw(ctx, Ax, Ay, X, Y);
+}
+
+var a = 1/2;
+var b = 1/2;
+
+var X = 600;
+var Y = 600;
+
+var eps = 1/5000;
+
+function mouseEvent(event){
+	a = (1 - event.offsetX / X);
+	b = event.offsetY / Y;
+	geps();
+}
+
+document.getElementById("canvas").addEventListener("mousemove", mouseEvent, false);
+
+geps();
+
+</script>
+
+</body>
+</html>

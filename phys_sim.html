@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<meta charset="UTF-8"> 
+<html>
+<body>
+
+<canvas id="canvas" width="400" height="400">
+</canvas>
+
+<table style="font-family:monospace;">
+	<tr>
+		<th>E_K = </th>
+		<th id="ke">0</th>
+	</tr>
+	<tr>
+		<th>E_R = </th>
+		<th id="re">0</th>
+	</tr>
+		<th>E_I = </th>
+		<th id="ie">0</th>
+	<tr>
+<table>
+
+<br>
+
+<script>
+
+// Vector operations
+
+function norm(x) {
+	return Math.sqrt(x[0]**2 + x[1]**2);
+}
+
+function normMeters(x, ppm){
+	return norm(x) / ppm;
+}
+
+function sub(x, y) {
+	return [x[0] - y[0], x[1] - y[1]];
+}
+
+function add(x, y) {
+	return [x[0] + y[0], x[1] + y[1]];
+}
+
+function scale(c, x) {
+	return [c * x[0], c*x[1]];
+}
+
+function dist(x, y) {
+	return norm(sub(x, y));
+}
+
+function distMeters(x, y, ppm) {
+	return dist(x, y) / ppm;
+}
+
+function normalize(c, x) {
+	return scale(c/norm(x), x);
+}
+
+function cossin(theta) {
+	return [Math.cos(theta), Math.sin(theta)];
+}
+
+function otimes(x, y) {
+	return x[0] * y[1] - x[1] * y[0];
+}
+
+function com_energies(pos, vel, mass, springs, ppm) {
+	totalmass = 0;
+	vel0 = 0;
+	vel1 = 0;
+	pos0 = 0;
+	pos1 = 0;
+	totalkinetic = 0;
+	for (var i = 0; i < mass.length; i++) {
+		vel0 += vel[i][0] * mass[i];
+		vel1 += vel[i][1] * mass[i];
+		pos0 += pos[i][0] * mass[i];
+		pos1 += pos[i][1] * mass[i];
+		totalmass += mass[i];
+		totalkinetic += mass[i] * normMeters(vel[i], ppm)**2 / 2;
+	}
+	com = scale(1 / totalmass, [pos0, pos1]);
+	com_vel = scale(1 / totalmass, [vel0, vel1]);
+	comkinetic = totalmass * normMeters(com_vel, ppm)**2 / 2;
+	angularmom = 0;
+	moment = 0;
+	for (var i = 0; i < mass.length; i++) {
+		adj = sub(vel[i], com_vel);
+		arm = sub(pos[i], com);
+		moment += mass[i] * norm(arm)**2;
+		angularmom += mass[i] * otimes(arm, adj) / ppm;
+	}
+	angularvel = angularmom / moment;
+	rotational = moment * angularvel**2 / 2
+	spring_energy = 0;
+	for (var i = 0; i < springs.length; i++) {
+		distance = distMeters(pos[springs[i].to], pos[springs[i].from], ppm);
+		spring_energy += springs[i].k * (distance - springs[i].r)**2 / 2;
+	}
+	internal = totalkinetic + spring_energy - comkinetic - rotational;
+	document.getElementById("ke").innerHTML = comkinetic;
+	document.getElementById("re").innerHTML = rotational;
+	document.getElementById("ie").innerHTML = internal;
+	return [comkinetic, rotational, internal];
+}
+
+// spring force due on x by xy with
+// relaxed length r with spring
+// constant k
+function spring(x, y, r, k, ppm) {
+	var s = r - dist(x, y)/ppm;
+	return normalize(k * s, sub(x, y))
+}
+/*
+function centroid(t, pos) {
+	s = [0, 0];
+	for (var i = 0; i < t.length; i++) s = add(s, pos[t[i]]);
+	return scale(1 / t.length, s);
+}
+
+function centroid_divide(tris, links, pos, mass, vel, dm, dv) {
+	nt = [];
+	for (var i = 0; i < tris.length; i++) {
+		tri = tris[i];
+		n = pos.length;
+		pos.push(centroid(tri, pos));
+		mass.push(dm);
+		vel.push(dv);
+		for (var j = 0; j < tri.length; j++) {
+			k = (j + 1) % tri.length;
+			nt.push([n, tri[j], tri[k]]);
+			links.push([n, tri[j]]);
+		}
+	}
+	return nt;
+}*/
+
+function transitiveSpring(x, y, pos, k, ppm) {
+	d = distMeters(pos[x], pos[y], ppm);
+	sp1 = {to: x, from: y, r: d, k};
+	sp2 = {to: y, from: x, r: d, k};
+	return [sp1, sp2];
+}	
+
+function draw(ctx, pos, faces, X, Y) {
+	ctx.clearRect(0, 0, X, Y);
+	ctx.fillStyle = "black";
+	ctx.fillRect(0, 0, X, Y);
+	for (var i = 0; i < faces.length; i++) {
+		nodes = faces[i].nodes;
+		// (nodes[j][0], nodes[j][1])
+		ctx.beginPath();
+		ctx.moveTo(pos[nodes[0]][0], pos[nodes[0]][1]);
+		for (var j = 1; j < nodes.length; j++) {
+			ctx.lineTo(pos[nodes[j]][0], pos[nodes[j]][1]);
+		}
+		ctx.fillStyle = faces[i].color;
+		ctx.strokeStyle = faces[i].color;
+		ctx.closePath();
+		ctx.stroke();
+		ctx.fill();
+	}
+}
+
+function update(dt, pos, vel, mass, springs, accel, X, Y, ppm) {
+	for (var i = 0; i < springs.length; i++) {
+		spr = springs[i];
+		x_i = spr.to;
+		y_i = spr.from;
+		F = spring(pos[x_i], pos[y_i], spr.r, spr.k, ppm);
+		vel[x_i] = add(vel[x_i], scale(dt / mass[x_i], F));
+	}
+	for (var i = 0; i < pos.length; i++) {
+		vel[i] = add(vel[i], scale(dt, accel));
+		pos[i] = add(pos[i], scale(dt * ppm, vel[i]));
+		if (pos[i][0] < 0 || pos[i][0] >= X) {
+			pos[i][0] = Math.max(Math.min(pos[i][0],X-1),0);
+			vel[i][0] = 0;
+		}
+		if (pos[i][1] < 0 || pos[i][1] >= Y) {
+			pos[i][1] = Math.max(Math.min(pos[i][1],Y-1),0);
+			vel[i][1] = 0;
+		}
+	}
+}
+
+function initialize(canvas, ms, simf) {
+	
+	var ctx = canvas.getContext("2d");
+	
+	var X = 400;
+	var Y = 320;
+	var origin = [X/2, Y/2];
+	
+	canvas.width = X;
+	canvas.height = Y;
+	
+	var ppm = 100;
+	
+	// Positions [pixels]
+	var pos = [];
+	// Velocity [m / s]
+	var vel = [];
+	// Masses (kg)
+	var mass = [];
+	// Springs {to: index, from: index, r: m, k: kg s^-2}
+	var springs = [];
+	// Faces {nodes: [indices],  color: style}
+	var faces = [];
+	// [N]
+	var accel = [0, 2];
+	
+	// Setting up a shape
+	R = 8;
+	N = 3;
+	K = 10000;
+	//depth = 2;
+	dv = [2,0];
+	dm = 1;
+	links = [];
+	squares = [];
+	
+	function f(i, j) {
+		return (2*N + 1)*(i + N) + j + N;
+	}
+	function ds(i, j) {
+		sq = 1/Math.sqrt(2);
+		xd = [-sq, sq];
+		yd = [sq, sq];
+		return add(scale(i * R, xd), scale(j * R, yd));
+	}
+	
+	k = 0;
+	for (var i = -N; i <= N; i++) {
+		for (var j = -N; j <= N; j++) {
+			coord = add(origin, ds(i,j));
+			pos.push(coord);
+			vel.push(dv);
+			mass.push(dm);
+			if (i < N) links.push([f(i, j), f(i + 1, j)]);
+			if (j < N) links.push([f(i, j), f(i, j + 1)]);
+			if (i < N && j < N) {
+				squares.push([f(i,j), f(i+1,j), f(i+1,j+1), f(i,j+1)]);
+				links.push([f(i,j), f(i+1,j+1)]);
+				links.push([f(i+1,j), f(i,j+1)]);
+			}
+			if (i < N - 1 && j < N - 1) {
+				links.push([f(i,j), f(i+2,j+2)]);
+				links.push([f(i+2,j), f(i,j+2)]);
+			}
+		}
+	}
+	
+	console.log(f(N, N));
+	console.log(pos);
+	
+	for (var i = 0; i < links.length; i++) {
+		nspr = transitiveSpring(links[i][0], links[i][1], pos, K, ppm);
+		springs = springs.concat(nspr);
+	}
+	
+	for (var i = 0; i < squares.length; i++) {
+		faces.push({nodes: squares[i], color: "green"});
+	}
+	
+	/*
+	first = [];
+	for (var i = 0; i < N; i++) {
+		cur = add(origin, scale(R, cossin(2 * i * Math.PI / N)))
+		pos.push(cur);
+		mass.push(dm);
+		vel.push(dv);
+		first.push(i);
+		links.push([i, (i + 1) % N]);
+	}
+	tris = [first];
+	for (var i = 0; i < depth; i++) {
+		tris = centroid_divide(tris, links, pos, mass, vel, dm, dv);
+	}
+	for (var i = 0; i < links.length; i++) {
+		nspr = transitiveSpring(links[i][0], links[i][1], pos, K, ppm);
+		springs = springs.concat(nspr);
+	}
+	/* Wireframe
+	for (var i = 0; i < tris.length; i++) {
+		faces.push({nodes: tris[i], color: "green"});
+	}
+	faces.push({nodes: first, color: "green"});
+	*/
+	
+	var dt = ms/(1000 * simf);
+	
+	return function() {
+		draw(ctx, pos, faces, X, Y);
+		for (var i = 0; i < simf; i++) {
+			update(dt, pos, vel, mass, springs, accel, X, Y, ppm);
+		}
+		com_energies(pos, vel, mass, springs, ppm);
+	}
+}
+
+fps = 60;
+simf = 16;
+ms = Math.floor(1000/fps);
+var canvas = document.getElementById("canvas");
+var interval = setInterval(initialize(canvas, ms, simf), ms);
+</script>
+
+</body>
+</html>

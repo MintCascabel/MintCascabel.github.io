@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style id="style">
+    ruby {
+        ruby-align:center;
+    }
+    rt {
+        font-size:40%;
+    }
+    .pinyin {
+        font-size: 0%;
+    }
+    .bopomofo {
+        font-size: 0%;
+    }
+    .ipa {
+        font-size: 0%;
+    }
+    .main {
+        font-size:200%;
+        padding: 0px 10px;
+    }
+    </style>
+    <script>
+        function changeRuby() {
+            let selected = document.getElementById('ruby').value;
+            var pinyin = "0%";
+            var bopomofo = "0%";
+            var ipa = "0%";
+            if (selected == "pinyin") pinyin = "100%";
+            if (selected == "bopomofo") bopomofo = "100%";
+            if (selected == "ipa") ipa = "100%";
+            var allPinyin = document.getElementsByClassName('pinyin');
+            for (var i = 0; i < allPinyin.length; i++) {
+                allPinyin[i].style.fontSize = pinyin;
+            }
+            var allBopomofo = document.getElementsByClassName('bopomofo');
+            for (var i = 0; i < allBopomofo.length; i++) {
+                allBopomofo[i].style.fontSize = bopomofo;
+            }
+            var allIPA = document.getElementsByClassName('ipa');
+            for (var i = 0; i < allIPA.length; i++) {
+                allIPA[i].style.fontSize = ipa;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="main">
+        <select name="ruby" id="ruby" onchange="changeRuby()" onload="changeRuby()">
+            <option value="none" selected>None</option>
+            <option value="pinyin">Pinyin</option>
+            <option value="bopomofo">Bopomofo</option>
+            <option value="ipa">IPA</option>
+        </select>
+    </div>
+    <br>
+    <div class="main">
+        <ruby>旁<rt><div class ="pinyin">páng</div><div class ="bopomofo">ㄆㄤˊ</div><div class ="ipa">pʰaŋ˧˥</div></rt></ruby><ruby>註<rt><div class ="pinyin">zhù</div><div class ="bopomofo">ㄓㄨˋ</div><div class ="ipa">ʈʂu˥˩</div></rt></ruby><ruby>標<rt><div class ="pinyin">bia</div><div class ="bopomofo">˙ㄅㄧㄚ</div><div class ="ipa">pi̯a˩</div></rt></ruby><ruby>記<rt><div class ="pinyin">jì</div><div class ="bopomofo">ㄐㄧˋ</div><div class ="ipa">tɕi˥˩</div></rt></ruby>（ruby character），<ruby>或<rt><div class ="pinyin">huò</div><div class ="bopomofo">ㄏㄨㄛˋ</div><div class ="ipa">xu̯o˥˩</div></rt></ruby><ruby>稱<rt><div class ="pinyin">chēng</div><div class ="bopomofo">ㄔㄥ</div><div class ="ipa">ʈʂʰəŋ˥</div></rt></ruby><ruby>注<rt><div class ="pinyin">zhù</div><div class ="bopomofo">ㄓㄨˋ</div><div class ="ipa">ʈʂu˥˩</div></rt></ruby><ruby>音<rt><div class ="pinyin">yīn</div><div class ="bopomofo">ㄧㄣ</div><div class ="ipa">in˥</div></rt></ruby><ruby>標<rt><div class ="pinyin">bia</div><div class ="bopomofo">˙ㄅㄧㄚ</div><div class ="ipa">pi̯a˨</div></rt></ruby><ruby>示<rt><div class ="pinyin">shì</div><div class ="bopomofo">ㄕㄧˋ</div><div class ="ipa">ʂi˥˩</div></rt></ruby>、<ruby>加<rt><div class ="pinyin">jiā</div><div class ="bopomofo">ㄐㄧㄚ</div><div class ="ipa">tɕi̯a˥</div></rt></ruby><ruby>注<rt><div class ="pinyin">zhù</div><div class ="bopomofo">ㄓㄨˋ</div><div class ="ipa">ʈʂu˥˩</div></rt></ruby><ruby>音<rt><div class ="pinyin">yīn</div><div class ="bopomofo">ㄧㄣ</div><div class ="ipa">in˥</div></rt></ruby>、Ruby<ruby>字<rt><div class ="pinyin">zì</div><div class ="bopomofo">ㄗㄧˋ</div><div class ="ipa">tsi˥˩</div></rt></ruby><ruby>元<rt><div class ="pinyin">yuán</div><div class ="bopomofo">ㄩㄢˊ</div><div class ="ipa">y̯ɛn˧˥</div></rt></ruby>、ruby<ruby>或<rt><div class ="pinyin">huò</div><div class ="bopomofo">ㄏㄨㄛˋ</div><div class ="ipa">xu̯o˥˩</div></rt></ruby>rubi，<ruby>是<rt><div class ="pinyin">shì</div><div class ="bopomofo">ㄕㄧˋ</div><div class ="ipa">ʂi˥˩</div></rt></ruby><ruby>一<rt><div class ="pinyin">yī</div><div class ="bopomofo">ㄧ</div><div class ="ipa">i˥</div></rt></ruby><ruby>種<rt><div class ="pinyin">zhǒng</div><div class ="bopomofo">ㄓㄨㄥˇ</div><div class ="ipa">ʈʂu̯əŋ˨˩</div></rt></ruby><ruby>表<rt><div class ="pinyin">bia</div><div class ="bopomofo">˙ㄅㄧㄚ</div><div class ="ipa">pi̯a˦</div></rt></ruby><ruby>意<rt><div class ="pinyin">yì</div><div class ="bopomofo">ㄧˋ</div><div class ="ipa">i˥˩</div></rt></ruby><ruby>文<rt><div class ="pinyin">wén</div><div class ="bopomofo">ㄨㄣˊ</div><div class ="ipa">ʊn˧˥</div></rt></ruby><ruby>字<rt><div class ="pinyin">zì</div><div class ="bopomofo">ㄗㄧˋ</div><div class ="ipa">tsi˥˩</div></rt></ruby><ruby>的<rt><div class ="pinyin">dì</div><div class ="bopomofo">ㄉㄧˋ</div><div class ="ipa">ti˥˩</div></rt></ruby><ruby>音<rt><div class ="pinyin">yīn</div><div class ="bopomofo">ㄧㄣ</div><div class ="ipa">in˥</div></rt></ruby><ruby>標<rt><div class ="pinyin">bia</div><div class ="bopomofo">˙ㄅㄧㄚ</div><div class ="ipa">pi̯a˨</div></rt></ruby><ruby>印<rt><div class ="pinyin">yìn</div><div class ="bopomofo">ㄧㄣˋ</div><div class ="ipa">in˥˩</div></rt></ruby><ruby>刷<rt><div class ="pinyin">shuā</div><div class ="bopomofo">ㄕㄨㄚ</div><div class ="ipa">ʂu̯a˥</div></rt></ruby><ruby>方<rt><div class ="pinyin">fāng</div><div class ="bopomofo">ㄈㄤ</div><div class ="ipa">faŋ˥</div></rt></ruby><ruby>式<rt><div class ="pinyin">shì</div><div class ="bopomofo">ㄕㄧˋ</div><div class ="ipa">ʂi˥˩</div></rt></ruby>，<ruby>廣<rt><div class ="pinyin">guǎng</div><div class ="bopomofo">ㄍㄨㄤˇ</div><div class ="ipa">ku̯aŋ˨˩</div></rt></ruby><ruby>泛<rt><div class ="pinyin">fàn</div><div class ="bopomofo">ㄈㄢˋ</div><div class ="ipa">fan˥˩</div></rt></ruby><ruby>地<rt><div class ="pinyin">dì</div><div class ="bopomofo">ㄉㄧˋ</div><div class ="ipa">ti˥˩</div></rt></ruby><ruby>運<rt><div class ="pinyin">yùn</div><div class ="bopomofo">ㄩㄣˋ</div><div class ="ipa">yn˥˩</div></rt></ruby><ruby>用<rt><div class ="pinyin">yòng</div><div class ="bopomofo">ㄩㄥˋ</div><div class ="ipa">i̯ʊŋ˥˩</div></rt></ruby><ruby>於<rt><div class ="pinyin">wū</div><div class ="bopomofo">ㄨ</div><div class ="ipa">u˥</div></rt></ruby><ruby>日<rt><div class ="pinyin">rì</div><div class ="bopomofo">ㄖㄧˋ</div><div class ="ipa">ʐi˥˩</div></rt></ruby><ruby>文<rt><div class ="pinyin">wén</div><div class ="bopomofo">ㄨㄣˊ</div><div class ="ipa">ʊn˧˥</div></rt></ruby><ruby>及<rt><div class ="pinyin">jí</div><div class ="bopomofo">ㄐㄧˊ</div><div class ="ipa">tɕi˧˥</div></rt></ruby><ruby>中<rt><div class ="pinyin">zhōng</div><div class ="bopomofo">ㄓㄨㄥ</div><div class ="ipa">ʈʂu̯əŋ˥</div></rt></ruby><ruby>文<rt><div class ="pinyin">wén</div><div class ="bopomofo">ㄨㄣˊ</div><div class ="ipa">ʊn˧˥</div></rt></ruby>。<ruby>一<rt><div class ="pinyin">yī</div><div class ="bopomofo">ㄧ</div><div class ="ipa">i˥</div></rt></ruby><ruby>般<rt><div class ="pinyin">bān</div><div class ="bopomofo">ㄅㄢ</div><div class ="ipa">pan˥</div></rt></ruby><ruby>這<rt><div class ="pinyin">zhè</div><div class ="bopomofo">ㄓㄜˋ</div><div class ="ipa">ʈʂɤ˥˩</div></rt></ruby><ruby>些<rt><div class ="pinyin">xiē</div><div class ="bopomofo">ㄒㄧㄝ</div><div class ="ipa">ɕi̯e˥</div></rt></ruby><ruby>字<rt><div class ="pinyin">zì</div><div class ="bopomofo">ㄗㄧˋ</div><div class ="ipa">tsi˥˩</div></rt></ruby><ruby>是<rt><div class ="pinyin">shì</div><div class ="bopomofo">ㄕㄧˋ</div><div class ="ipa">ʂi˥˩</div></rt></ruby><ruby>放<rt><div class ="pinyin">fàng</div><div class ="bopomofo">ㄈㄤˋ</div><div class ="ipa">faŋ˥˩</div></rt></ruby><ruby>於<rt><div class ="pinyin">wū</div><div class ="bopomofo">ㄨ</div><div class ="ipa">u˥</div></rt></ruby><ruby>表<rt><div class ="pinyin">bia</div><div class ="bopomofo">˙ㄅㄧㄚ</div><div class ="ipa">pi̯a˨</div></rt></ruby><ruby>意<rt><div class ="pinyin">yì</div><div class ="bopomofo">ㄧˋ</div><div class ="ipa">i˥˩</div></rt></ruby><ruby>文<rt><div class ="pinyin">wén</div><div class ="bopomofo">ㄨㄣˊ</div><div class ="ipa">ʊn˧˥</div></rt></ruby><ruby>字<rt><div class ="pinyin">zì</div><div class ="bopomofo">ㄗㄧˋ</div><div class ="ipa">tsi˥˩</div></rt></ruby><ruby>的<rt><div class ="pinyin">dì</div><div class ="bopomofo">ㄉㄧˋ</div><div class ="ipa">ti˥˩</div></rt></ruby><ruby>上<rt><div class ="pinyin">shàng</div><div class ="bopomofo">ㄕㄤˋ</div><div class ="ipa">ʂaŋ˥˩</div></rt></ruby><ruby>方<rt><div class ="pinyin">fāng</div><div class ="bopomofo">ㄈㄤ</div><div class ="ipa">faŋ˥</div></rt></ruby><ruby>或<rt><div class ="pinyin">huò</div><div class ="bopomofo">ㄏㄨㄛˋ</div><div class ="ipa">xu̯o˥˩</div></rt></ruby><ruby>右<rt><div class ="pinyin">yòu</div><div class ="bopomofo">ㄧㄡˋ</div><div class ="ipa">i̯ou̯˥˩</div></rt></ruby><ruby>邊<rt><div class ="pinyin">bian</div><div class ="bopomofo">˙ㄅㄧㄢ</div><div class ="ipa">pi̯ɛn˩</div></rt></ruby>，<ruby>作<rt><div class ="pinyin">zuò</div><div class ="bopomofo">ㄗㄨㄛˋ</div><div class ="ipa">tsu̯o˥˩</div></rt></ruby><ruby>為<rt><div class ="pinyin">wéi</div><div class ="bopomofo">ㄨㄟˊ</div><div class ="ipa">u̯ei̯˧˥</div></rt></ruby><ruby>文<rt><div class ="pinyin">wén</div><div class ="bopomofo">ㄨㄣˊ</div><div class ="ipa">ʊn˧˥</div></rt></ruby><ruby>字<rt><div class ="pinyin">zì</div><div class ="bopomofo">ㄗㄧˋ</div><div class ="ipa">tsi˥˩</div></rt></ruby><ruby>的<rt><div class ="pinyin">dì</div><div class ="bopomofo">ㄉㄧˋ</div><div class ="ipa">ti˥˩</div></rt></ruby><ruby>拼<rt><div class ="pinyin">pīn</div><div class ="bopomofo">ㄆㄧㄣ</div><div class ="ipa">pʰin˥</div></rt></ruby><ruby>音<rt><div class ="pinyin">yīn</div><div class ="bopomofo">ㄧㄣ</div><div class ="ipa">in˥</div></rt></ruby><ruby>或<rt><div class ="pinyin">huò</div><div class ="bopomofo">ㄏㄨㄛˋ</div><div class ="ipa">xu̯o˥˩</div></rt></ruby><ruby>註<rt><div class ="pinyin">zhù</div><div class ="bopomofo">ㄓㄨˋ</div><div class ="ipa">ʈʂu˥˩</div></rt></ruby><ruby>解<rt><div class ="pinyin">jiě</div><div class ="bopomofo">ㄐㄧㄝˇ</div><div class ="ipa">tɕi̯e˨˩˦</div></rt></ruby>。 
+    </div>
+</body>

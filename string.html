@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="canvas" width="400" height="320">
+</canvas>
+
+<br>
+
+<script>
+
+function update(ctx, an, alpha, points, X, Y) {
+	ctx.clearRect(0,0,X,Y);
+	
+	cy = Math.floor(Y/2);
+	
+	ctx.beginPath();
+	ctx.moveTo(0, cy);
+	
+	for (var i = 1; i <= points; i++) {
+	
+		var dp = 0;
+		
+		var x = X * i / (points + 1);
+		
+		for (var n = 0; n < an.length; n++) {
+		
+			dp += an[n] * Math.cos(alpha * Math.PI * n * t / X) * Math.sin(Math.PI * n * x / X);
+		
+		}
+		
+		ctx.lineTo(x, Math.floor(cy + dp));
+	}
+	
+	ctx.lineTo(X, cy);
+	ctx.stroke();
+	t += dt;
+}
+
+function pack(canvas, N, alpha, points) {
+	canvas.width = X;
+	canvas.height = Y;
+	var ctx = canvas.getContext("2d");
+	
+	var k = 20;
+	var l = 100;
+	var an = [];
+	
+	for (var n = 1; n <= N; n++) {
+		
+		var a = -4 * k * Math.cos(l * n * Math.PI / X) / (n * Math.PI);
+		var b = 2 * k * X / (l * Math.pow(n * Math.PI, 2));
+		b += 2 * k * X / ( (X - l) * Math.pow(n * Math.PI, 2) );
+		var c = b * Math.sin(l * n * Math.PI / X);
+		console.log(a, b);
+		a = a + c; 
+		
+		an.push(a);
+	}
+	
+	console.log(an);
+	
+	ctx.fillStyle = "#FFFFFF";
+	ctx.strokeStyle = "#000000";
+	
+	return function() {
+		update(ctx, an, alpha, points, X, Y);
+	}
+}
+
+var t = 0;
+var dt = 1;
+
+var X = 400;
+var Y = 320;
+
+var canvas = document.getElementById("canvas");
+
+var interval;
+
+interval = setInterval(pack(canvas, 200, 1, 300), 10);
+
+
+</script>
+
+</body>
+</html>
