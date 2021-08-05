@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="canvas" width="300" height="300">
+</canvas>
+
+<br>
+
+<button onclick="reset()">Begin/Reset</button>
+
+<div>
+  <input type="range" id="a0" name="a0" min="-2" max="2", step="0.01">
+  <label for="a0">a0</label>
+</div>
+
+<div>
+  <input type="range" id="a1" name="a1" min="0" max="2", step="0.01", value="1.0">
+  <label for="a1">a1</label>
+</div>
+
+<div>
+  <input type="range" id="a2" name="a2" min="-2" max="2", step="0.01">
+  <label for="a1">a2</label>
+</div>
+
+<div>
+  <input type="range" id="a3" name="a3" min="0" max="2", step="0.01", value = "0.0">
+  <label for="a1">a3</label>
+</div>
+
+<script>
+
+function mod(b, k) {
+	return (k + (b % k)) % k;
+}
+
+function reset() {
+	for (var i = 0; i < n; i++) {
+		x[i] = 2;
+		v[i] = 0;
+	}
+}
+
+function advance() {
+	var j = i;
+	i = mod(i + 1, n);
+	v[i] = v[j] - dt * (f(x[j]) * v[j] + g(x[j]));
+	x[i] = x[j] + dt * v[i];
+}
+
+function f(x) {
+	return -a[0] + -x*x * a[2];
+}
+
+function g(x) {
+	return x * a[1] + x*x*x * a[3];
+}
+
+function updateA() {
+	a = [
+		a0.valueAsNumber,
+		a1.valueAsNumber,
+		a2.valueAsNumber,
+		a3.valueAsNumber
+	];
+}
+
+function tick() {
+	updateA();
+	for (var m = 0; m < ticksPerFrame; m++) {
+		advance();
+	}
+	draw();
+}
+
+function draw() {
+	var xs = width / 10;
+	var xh = width / 2;
+	var ys = height / 10;
+	var yh = height / 2;
+	ctx.lineWidth = 2.0;
+	ctx.strokeStyle = 'green';
+	ctx.fillStyle = 'black';
+	ctx.fillRect(0, 0, width, height);
+	for (var j = 0; j < 7; j += 1) {
+		ctx.beginPath();
+		ctx.arc(xh, yh, j * xs, 0, 2 * Math.PI);
+		ctx.stroke();
+	}
+	ctx.strokeStyle = 'lime';
+	ctx.beginPath();
+	ctx.moveTo(x[i] * xs + xh, v[i] * ys + yh);
+	for (var j = 1; j < n - 1; j += 100) {
+		var k = mod(i - j, n);
+		ctx.lineTo(x[k] * xs + xh, v[k] * ys + yh);
+	}
+	ctx.stroke();
+	ctx.closePath();
+}
+
+var a0 = document.getElementById("a0");
+var a1 = document.getElementById("a1");
+var a2 = document.getElementById("a2");
+var a3 = document.getElementById("a3");
+
+var a = [0, 0, 0, 0];
+
+var dt = 0.0001;
+var n = 100000;
+var i = 0;
+var height = 300;
+var width = 300;
+var ticksPerFrame = 1000;
+var x = new Float64Array(n);
+var v = new Float64Array(n);
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext('2d');
+setInterval(tick, 10);
+
+</script>
+
+</body>
+</html>
