@@ -6,8 +6,14 @@
 <canvas id="canvas" width="400" height="400">
 </canvas>
 <p id="counter">Ready.</p>
-
 <br>
+<label for="y">Height</label>
+<input type="number" id="y" name="y" value="200" min="100" max="500" step="100">
+<br>
+<label for="x">Width</label>
+<input type="number" id="x" name="x" value="200" min="100" max="500" step="100">
+<br>
+<button onclick="reset()">Reset</button> 
 
 <script>
 
@@ -31,7 +37,9 @@ function draw(ctx, px, py, X, Y) {
 
 function iteratePointsEps(a, b, Ax, Ay, eps) {
 	var i = 0;
-	while (i < Ax.length - 1) {
+	var limit = 1000;
+	while (i < Ax.length - 1 && limit > 0) {
+		limit--;
 		if (Math.pow(Ax[i] - Ax[i + 1], 2) + Math.pow(Ay[i] - Ay[i + 1], 2) < eps) {
 			i++;
 		} else {
@@ -76,9 +84,26 @@ function mouseEvent(event){
 	geps();
 }
 
+function getOrDefault(id, def) {
+	var num = Number(document.getElementById(id).value);
+	if (isNaN(num)) {
+		return def;
+	} else {
+		return num;
+	}
+}
+
+function reset() {
+	a = 0.5;
+	b = 0.5;
+	X = getOrDefault("x", X);
+	Y = getOrDefault("y", Y);
+	geps();
+}
+
 document.getElementById("canvas").addEventListener("mousemove", mouseEvent, false);
 
-geps();
+reset();
 
 </script>
 

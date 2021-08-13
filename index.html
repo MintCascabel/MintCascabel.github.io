@@ -2,46 +2,58 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
-	</style
+		.box {
+			display: flex;
+			flex-direction: row;
+		}
+		.sidebar {
+			display: flex;
+			flex-direction: column;
+			width: 15%;
+			height: 100%;
+		}
+		.item {
+			width: 85%;
+			height: max-content;
+		}
+	</style>
+	<script>
+		function loaded(f) {
+			f.height = f.contentWindow.document.body.scrollHeight + "px";
+		}
+	</script>
 </head>
 <body>
-	<h1>kjsr</h1>
-	<table style="border: 1px solid black; border-spacing: 5px; text-align: left;">
-		<tr>
-			<th><a href="ruby.html">Ruby</a></th>
-			<th>Ruby in pinyin, bopomofo, and IPA.</th>
-		</tr>
-		<tr>
-			<th><a href="chaos2.html">Chaos 2</a></th>
-			<th>Fractal figure generator.</th>
-		</tr>
-		<tr>
-			<th><a href="lienard.html">Liénard</a></th>
-			<th>Phase space visualizer for Liénard-like equations.</th>
-		</tr>
-		<tr>
-			<th><a href="phys_sim.html">Phys Sim</a></th>
-			<th>Soft body physics simulation.</th>
-		</tr>
-		<tr>
-			<th><a href="color_floating.html">Color Floating</a></th>
-			<th>Floating color.</th>
-		</tr>
-		<tr>
-			<th><a href="regular_palette.html">Regular Palette</a></th>
-			<th>Equally spaced colors.</th>
-		</tr>
-		<tr>
-			<th><a href="lsw_function.html">LSW Function</a></th>
-			<th>A Blancmange-like function.</th>
-		</tr>
-		<tr>
-			<th><a href="double_waves.html">Double Waves</a></th>
-			<th>Change mode to set barriers.</th>
-		</tr>
-		<tr>
-			<th><a href="string.html">String</a></th>
-			<th>1D wave equation.</th>
-		</tr>
-	</table> 
+	<div class = "box">
+<div class = "sidebar">
+<a href="ruby.html" target="f">Ruby</a>
+<br>
+Ruby for Chinese text.
+<br>
+<a href="chaos2.html" target="f">Chaos</a>
+<br>
+Fractal figure generator.
+<br> 
+<a href="lienard.html" target="f">Liénard</a>
+<br>
+Phase space visualizer for Liénard-like equations.
+<br> 
+<a href="color_floating.html" target="f">Color Floating</a>
+<br>
+Floating color.
+<br> 
+<a href="regular_palette.html" target="f">Regular Palette</a>
+<br>
+Regularly spaced colors in HSV space.
+<br>
+<a href="lsw_function.html" target="f">LSW Function</a>
+<br>
+A Blancmange-like function. 
+<br>
+<a href="double_waves.html" target="f">Double Waves</a>
+<br>
+A simple wave simulator.
+</div>
+	<iframe class = "item" name="f" src="lienard.html" sandbox="allow-scripts allow-same-origin" onload="loaded(this)"></li>
+	</div>
 </body>

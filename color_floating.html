@@ -4,9 +4,17 @@
 
 <canvas id="canvas" width="400" height="320">
 </canvas>
-
 <br>
-
+<label for="y">Height</label>
+<input type="number" id="y" name="y" value="30" min="5" max="100" step="5">
+<br>
+<label for="x">Width</label>
+<input type="number" id="x" name="x" value="30" min="5" max="100" step="5">
+<br>
+<label for="scale">Scale (px)</label>
+<input type="number" id="scale" name="scale" value="5" min="1" max="50" step="1">
+<br>
+<button onclick="reset()">Reset</button> 
 <script>
 
 function copy2d(arr) {
@@ -252,19 +260,32 @@ function pack(canvas) {
 	var stateM = new2d(X, Y, 0);
 	var stateL = new2d(X, Y, 0);
 	
+	var theta0 = 2 * Math.random() * Math.PI;
+	var theta1 = 2 * Math.random() * Math.PI;
+	var s0 = 0.5 * Math.sin(theta0);
+	var c0 = 0.5 * Math.cos(theta0);
+	var s1 = 0.5 * Math.sin(theta1);
+	var c1 = 0.5 * Math.cos(theta1);
+	var c = Math.random();
+	var m = Math.random();
+	var l = Math.random();
+	
 	for (var x = 1; x < X - 1; x++) {
 		for (var y = 1; y < Y - 1; y++) {
 			
 			r = Math.pow((4*x - 2 * X) / X, 2) + Math.pow((4*y - 2 * Y) / Y, 2);
 			if (r <= 0.5) {
-				stateX[x][y] = 1;
-				stateY[x][y] = 1;
-				stateC[x][y] = 2;
+				stateX[x][y] = s0;
+				stateY[x][y] = c0;
+				stateC[x][y] = 1 - c;
+				stateM[x][y] = 1 - m;
+				stateL[x][y] = 1 - l;
 			} else if (r <= 1) {
-				stateX[x][y] = 1;
-				stateY[x][y] = .5;
-				stateC[x][y] = 2;
-				stateM[x][y] = 2;
+				stateX[x][y] = s1;
+				stateY[x][y] = c1;
+				stateC[x][y] = c;
+				stateM[x][y] = m;
+				stateL[x][y] = l;
 			}
 		}
 	}
@@ -286,14 +307,26 @@ var canvas = document.getElementById("canvas");
 
 var interval;
 
-var scale = 10;
+var scale = 5;
 
 var delay = 10;
 
 var mu = 1;
 var lambda = 1;
 
+function getOrDefault(id, def) {
+	var num = Number(document.getElementById(id).value);
+	if (isNaN(num)) {
+		return def;
+	} else {
+		return num;
+	}
+}
+
 function reset() {
+	X = getOrDefault("x", X);
+	Y = getOrDefault("y", Y);
+	scale = getOrDefault("scale", scale);
 	if (interval !== undefined) clearInterval(interval);
 	interval = setInterval(pack(canvas), delay)
 }
@@ -306,6 +339,5 @@ function stop() {
 reset();
 
 </script>
-
 </body>
 </html>
