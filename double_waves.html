@@ -141,11 +141,11 @@ function changeMode(event) {
 	currentMode = (currentMode + 1) % 3;
 	var button = document.getElementById("button");
 	if (currentMode == Mode.BLOCK) {
-		button.innerHTML = "Current tool: Add block";
+		button.innerHTML = "Current tool: Add barrier";
 	} else if (currentMode == Mode.EXCITE) {
-		button.innerHTML = "Current tool: Excite wave";
+		button.innerHTML = "Current tool: Excite";
 	} else if (currentMode == Mode.REMOVE) {
-		button.innerHTML = "Current tool: Remove block";
+		button.innerHTML = "Current tool: Remove barrier";
 	}
 }
 

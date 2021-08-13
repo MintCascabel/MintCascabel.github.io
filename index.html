@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>kjsr</title>
     <style>
+		a {
+			font-weight: bold;
+			color: MediumOrchid;
+		}
 		.box {
 			display: flex;
 			flex-direction: row;
@@ -12,48 +17,72 @@
 			width: 15%;
 			height: 100%;
 		}
+		p {
+			margin-top: -3px;
+			margin-bottom: 0px;
+			border-style: solid;
+			border-color: MediumOrchid;
+			padding-top: 5px;
+			padding-right: 5px;
+			padding-bottom: 5px;
+			padding-left: 5px;
+		}
 		.item {
+			margin-top: 5px;
+			margin-left: 5px;
 			width: 85%;
-			height: max-content;
+			border: 0;
 		}
 	</style>
 	<script>
 		function loaded(f) {
-			f.height = f.contentWindow.document.body.scrollHeight + "px";
+			f.height = ""
+			f.height = window.screen.height + "";
 		}
 	</script>
 </head>
 <body>
-	<div class = "box">
+	<div  id = "box" class = "box">
 <div class = "sidebar">
+<p>
+<a href="home.html" target="f">kjsr</a>
+</p>
+<p>
 <a href="ruby.html" target="f">Ruby</a>
 <br>
 Ruby for Chinese text.
-<br>
+</p>
+<p>
 <a href="chaos2.html" target="f">Chaos</a>
 <br>
 Fractal figure generator.
-<br> 
+</p>
+<p> 
 <a href="lienard.html" target="f">Liénard</a>
 <br>
 Phase space visualizer for Liénard-like equations.
-<br> 
+</p> 
+<p>
 <a href="color_floating.html" target="f">Color Floating</a>
 <br>
-Floating color.
-<br> 
+Floating paint on a fluid governed by the Euler equations.
+</p>
+<p> 
 <a href="regular_palette.html" target="f">Regular Palette</a>
 <br>
 Regularly spaced colors in HSV space.
-<br>
+</p>
+<p>
 <a href="lsw_function.html" target="f">LSW Function</a>
 <br>
 A Blancmange-like function. 
-<br>
+</p>
+<p>
 <a href="double_waves.html" target="f">Double Waves</a>
 <br>
-A simple wave simulator.
+A simple wave simulator with drawable barriers.
+</p>
 </div>
-	<iframe class = "item" name="f" src="lienard.html" sandbox="allow-scripts allow-same-origin" onload="loaded(this)"></li>
+	<iframe class = "item" id="f" name="f" src="home.html" sandbox="allow-scripts" onload="loaded(this)"></li>
 	</div>
 </body>
