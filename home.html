@@ -1,63 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8"/>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
 	<script>
-		var chars = ["┃", "┛", "━", "┗", "┃", "┏", "━", "┓"];
+		var chars = ["▕", "▖", "▞", "▛", "█", "▜", "▚", "▘"];
+		var chrLength = chars.length;
 		function mod(x, y) {
 			return ((x % y) + y) % y;
 		}
-		function getOpeningTag(c) {
-			return "<p style = \"color:hsl(" + mod(360 * c, 360) + ", 80%, 80%)\">";
+		function getOpeningTag(idx, c) {
+			//return "<p id = \"a" + idx + "\"style = \"color:hsl(" + mod(360 * c, 360) + ", 59%, 58%)\">";
+			return "<p id = \"a" + idx + "\">";
 		}
-		function getChar(dx, dy) {
-			return chars[mod(Math.floor(4 * Math.atan2(dy, dx) / Math.PI +0.5), 8)];
-		}
-		function dist(x0, y0, x1, y1) {
-			return Math.abs(x0 - x1) + Math.abs(y0 - y1);
+		function randomInt(max) {
+			return Math.floor(Math.random() * max);
 		}
 		var closingTag = "</p>";
-		function fill(x, y, pc) {
-			var scale = 0.81 * y / x;
-			var xarr = [];
-			var yarr = [];
+		var idx = 0;
+		const dx = [1, 0, -1, 0];
+		const dy = [0, 1, 0, -1];
+		var state = [];
+		var antsX = [];
+		var antsY = [];
+		var antsD = [];
+		var xMax = 0;
+		var yMax = 0;
+		var interval;
+		// pc = # of ants
+		function init(x, y, pc) {
+			xMax = x;
+			yMax = y;
 			var b = document.getElementById("b");
 			b.innerHTML = "";
+			antsX = [];
+			antsY = [];
+			antsD = [];
 			for (var i = 0; i < pc; i++) {
-				xarr.push(Math.random());
-				yarr.push(scale * Math.random());
+				antsX.push(randomInt(x));
+				antsY.push(randomInt(y));
+				antsD.push(randomInt(4));
 			}
+			state = [];
 			for (var i = 0; i < y; i++) {
+				var slice = [];
 				var s = "";
 				for (var j = 0; j < x; j++) {
-					var vx = j / x;
-					var vy = scale * i / y
-					var d = dist(vx, vy, xarr[0], yarr[0]);
-					var idx = 0;
-					for (var k = 1; k < pc; k++) {
-						var dn = dist(vx, vy, xarr[k], yarr[k]);
-						if (dn < d) {
-							idx = k;
-							d = dn;
-						}
-					}
-					s += getChar(vx - xarr[idx], vy - yarr[idx]);
+					//var value = randomInt(chrLength);
+					var value = 2;
+					s += chars[value];
+					slice.push(value);
 				}
-				b.innerHTML += getOpeningTag(i / y) + s + closingTag;
+				state.push(slice);
+				b.innerHTML += getOpeningTag(i, i / y) + s + closingTag;
 			}
+		}
+
+		function step() {
+			var x = antsX[idx];
+			var y = antsY[idx];
+			var d = antsD[idx];
+			d += 2 * (state[y][x] % 2) - 1
+			d = mod(d, 4);
+			antsD[idx] = d;
+			state[y][x] = mod(state[y][x] + 1, chrLength);
+			// Maybe not the best
+			var p = document.getElementById("a" + y);
+			var s = p.innerHTML;
+			p.innerHTML = s.slice(0, x) + chars[state[y][x]] + s.slice(x + 1, xMax);
+			antsX[idx] = mod(x + dx[d], xMax);
+			antsY[idx] = mod(y + dy[d], yMax);
+			idx = mod(idx + 1, antsD.length);
+		}
+		function gstep() {
+			for (var i = 0; i < 20; i++) step();
 		}
 	</script>
 	<style>
 		body {
 			font-family:monospace;
-			font-weight: bold;
-			font-size: 50%;
+			font-style:italic;
+			font-weight: 900;
+			font-size: 100%;
 			line-height: 0;
 		}
 	</style>
 </head>
-<body onload="fill(120, 60, 100)">
-	<p id="b"></p>
+<body onload="init(60, 30, 20); setInterval(step, 1);">
+	<p id="b" style="color:mediumorchid"></p>
 	<br>
-	<button onclick="fill(120, 60, 100)">Regenerate</button>
-</body>
+</body></html>
