@@ -1,0 +1,421 @@
+/* Automatically generated */
+
+.vector {
+	display: none;
+}
+
+:root {
+	--z005F00: hsl(120, 100%, 18%);
+	--zCDDACD: hsl(120, 14%, 82%);
+	--zFFFFFF: hsl(0, 0%, 100%);
+	--z2A3B92: hsl(230, 55%, 36%);
+	--zBF3718: hsl(11, 77%, 42%);
+	--z038249: hsl(153, 95%, 26%);
+	--zD0E4CC: hsl(110, 30%, 84%);
+	--zFBFFEC: hsl(72, 100%, 96%);
+	--zfff: hsl(0, 0%, 100%);
+	--z994913: hsl(24, 77%, 33%);
+	--zBC197A: hsl(324, 76%, 41%);
+	--zE6491C: hsl(13, 80%, 50%);
+	--z053D05: hsl(120, 84%, 12%);
+	--z024C02: hsl(120, 94%, 15%);
+	--zD37F11: hsl(34, 85%, 44%);
+	--z992B11: hsl(11, 80%, 33%);
+	--zC46859: hsl(8, 47%, 55%);
+	--zCB8484: hsl(0, 40%, 65%);
+	--zC04C4C: hsl(0, 47%, 52%);
+	--z000000: hsl(0, 0%, 0%);
+}
+
+.style0 {
+	enable-background: new;
+}
+
+.style1 {
+	fill: var(--z005F00);
+}
+
+.style2 {
+	fill: var(--zCDDACD);
+}
+
+.style3 {
+	fill: var(--zFFFFFF);
+}
+
+.style4 {
+	fill: url(#rect3008_1_);
+}
+
+.style5 {
+	filter: url(#filter3970-5);
+}
+
+.style6 {
+	fill: url(#SVGID_1_);
+}
+
+.style7 {
+	fill: var(--z2A3B92);
+}
+
+.style8 {
+	fill: var(--zBF3718);
+}
+
+.style9 {
+	fill: var(--z038249);
+}
+
+.style10 {
+	stop-color: var(--zD0E4CC);
+}
+
+.style11 {
+	stop-color: var(--zFBFFEC);
+}
+
+.style12 {
+	stop-color: var(--zfff);
+}
+
+.style13 {
+	fill: var(--z994913);
+}
+
+.style14 {
+	fill: var(--zBC197A);
+}
+
+.style15 {
+	fill: none;
+	stroke: var(--z2A3B92);
+	stroke-width: 4.5;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-miterlimit: 10;
+}
+
+.style16 {
+	fill: none;
+	stroke: var(--z2A3B92);
+	stroke-width: 4.2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-miterlimit: 10;
+}
+
+.style17 {
+	fill: none;
+	stroke: var(--zBF3718);
+	stroke-width: 4;
+	stroke-miterlimit: 10;
+}
+
+.style18 {
+	fill: var(--z038249);
+	stroke: var(--z038249);
+	stroke-width: 2;
+	stroke-miterlimit: 10;
+}
+
+.style19 {
+	fill: var(--zBF3718);
+	stroke: var(--zBF3718);
+	stroke-width: 2;
+	stroke-miterlimit: 10;
+}
+
+.style20 {
+	fill: var(--z2A3B92);
+	stroke: var(--z2A3B92);
+	stroke-width: 2;
+	stroke-miterlimit: 10;
+}
+
+.style21 {
+	fill: var(--zE6491C);
+	stroke: var(--zE6491C);
+	stroke-width: 10;
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.style22 {
+	fill: var(--z053D05);
+}
+
+.style23 {
+	fill: var(--z024C02);
+}
+
+.style24 {
+	fill: var(--zD37F11);
+}
+
+.style25 {
+	fill: url(#rect3008_2_);
+}
+
+.style26 {
+	fill: var(--z2A3B92);
+	stroke: var(--z2A3B92);
+	stroke-width: 1.5;
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.style27 {
+	fill: none;
+	stroke: var(--z2A3B92);
+	stroke-width: 3.7;
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.style28 {
+	fill: none;
+	stroke: var(--z2A3B92);
+	stroke-width: 3.7;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-miterlimit: 10;
+}
+
+.style29 {
+	fill: none;
+	stroke: var(--z038249);
+	stroke-width: 4;
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.style30 {
+	fill: none;
+	stroke: var(--zBF3718);
+	stroke-width: 4;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-miterlimit: 10;
+}
+
+.style31 {
+	fill: none;
+	stroke: var(--zBF3718);
+	stroke-width: 1.378;
+	stroke-linecap: round;
+}
+
+.style32 {
+	fill: none;
+	stroke: var(--zBF3718);
+	stroke-width: 1.6285;
+	stroke-linecap: round;
+}
+
+.style33 {
+	fill: none;
+	stroke: var(--zBF3718);
+	stroke-width: 1.5;
+}
+
+.style34 {
+	fill: var(--zBF3718);
+	stroke: var(--zBF3718);
+	stroke-width: 1.5;
+	stroke-linecap: round;
+}
+
+.style35 {
+	fill: none;
+	stroke: var(--z2A3B92);
+	stroke-width: 3.7;
+	stroke-miterlimit: 10;
+}
+
+.style36 {
+	fill: var(--z2A3B92);
+	stroke: var(--z2A3B92);
+	stroke-width: 1.5;
+	stroke-miterlimit: 10;
+}
+
+.style37 {
+	fill: none;
+}
+
+.style38 {
+	fill: none;
+	stroke: var(--zBC197A);
+	stroke-width: 1.5;
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.style39 {
+	fill: url(#SVGID_2_);
+}
+
+.style40 {
+	fill: var(--z038249);
+	stroke: var(--z038249);
+	stroke-miterlimit: 10;
+}
+
+.style41 {
+	fill: var(--z2A3B92);
+	stroke: var(--z2A3B92);
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.style42 {
+	fill: var(--z992B11);
+}
+
+.style43 {
+	stop-color: var(--zBF3718);
+}
+
+.style44 {
+	fill: var(--zC46859);
+}
+
+.style45 {
+	fill: var(--zCB8484);
+}
+
+.style46 {
+	fill: var(--zC04C4C);
+}
+
+.style47 {
+	fill: var(--zD37F11);
+	stroke: var(--zD37F11);
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.style48 {
+	fill: none;
+	stroke: var(--z2A3B92);
+	stroke-width: 1.5;
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.style49 {
+	fill: var(--zD37F11);
+	stroke: var(--zD37F11);
+	stroke-width: 0.5;
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.style50 {
+	fill: none;
+	stroke: var(--z000000);
+	stroke-width: 6;
+	stroke-miterlimit: 10;
+}
+
+.style51 {
+	fill: none;
+	stroke: var(--zBF3718);
+	stroke-width: 3;
+	stroke-miterlimit: 10;
+}
+
+.style52 {
+	fill: none;
+	stroke: var(--zD37F11);
+	stroke-width: 4.8;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.style53 {
+	fill: none;
+	stroke: var(--z2A3B92);
+	stroke-width: 2.7;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.style54 {
+	fill: none;
+	stroke: var(--zBF3718);
+	stroke-width: 2.3;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.style55 {
+	fill: none;
+	stroke: var(--z038249);
+	stroke-width: 2.5;
+	stroke-miterlimit: 10;
+}
+
+.style56 {
+	fill: var(--zFFFFFF);
+	stroke: var(--z000000);
+	stroke-width: 3;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-miterlimit: 10;
+}
+
+.style57 {
+	fill: url(#XMLID_6_);
+}
+
+.style58 {
+	fill: none;
+	stroke: var(--z038249);
+	stroke-width: 1.378;
+	stroke-linecap: round;
+}
+
+.style59 {
+	fill: none;
+	stroke: var(--z038249);
+	stroke-width: 1.6285;
+	stroke-linecap: round;
+}
+
+.style60 {
+	fill: none;
+	stroke: var(--z038249);
+	stroke-width: 1.5;
+}
+
+.style61 {
+	fill: var(--zBF3718);
+	stroke: var(--z038249);
+	stroke-width: 1.5;
+	stroke-linecap: round;
+}
+
+.style62 {
+	fill: none;
+	stroke: var(--z038249);
+	stroke-width: 4.2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.style63 {
+	fill: var(--z2A3B92);
+	stroke: var(--z2A3B92);
+	stroke-width: 0.5;
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.style64 {
+	fill: none;
+	stroke: var(--z2A3B92);
+	stroke-width: 1.378;
+	stroke-linecap: round;
+}
